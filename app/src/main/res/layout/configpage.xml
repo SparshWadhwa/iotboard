@@ -11,7 +11,21 @@
       android:layout_height="wrap_content"
       android:text="Enter your unique itendification code mentioned on your extension box"/>
 
-    <com.rengwuxian.materialedittext.MaterialEditText
+
+  <com.rengwuxian.materialedittext.MaterialEditText
+      android:id="@+id/editboardName"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginRight="10dp"
+      android:layout_marginLeft="10dp"
+      android:editable="false"
+      android:layout_marginBottom="10dp"
+
+      android:textColor="#000"
+      android:hint="Friendly Board name"
+      app:met_floatingLabel="normal" />
+
+  <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/edittext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,7 +35,7 @@
         android:layout_marginBottom="10dp"
 
         android:textColor="#000"
-        android:hint="identification number"
+        android:hint="Identification number"
         app:met_floatingLabel="normal" />
 
 

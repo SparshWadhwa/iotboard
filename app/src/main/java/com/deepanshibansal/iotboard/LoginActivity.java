@@ -1,129 +1,149 @@
 package com.deepanshibansal.iotboard;
 import android.content.DialogInterface;
-        import android.support.v7.app.AlertDialog;
+import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
         import android.support.v7.app.AppCompatActivity;
         import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
         import android.view.View;
         import android.widget.Button;
-        import android.widget.Toast;
+import android.widget.EditText;
+import android.widget.Toast;
 
         import com.deepanshibansal.iotboard.Model.User;
-        import com.google.firebase.database.DataSnapshot;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseException;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DataSnapshot;
         import com.google.firebase.database.DatabaseError;
         import com.google.firebase.database.DatabaseReference;
         import com.google.firebase.database.FirebaseDatabase;
         import com.google.firebase.database.ValueEventListener;
         import com.rengwuxian.materialedittext.MaterialEditText;
 
-        import java.util.zip.Inflater;
+import java.util.concurrent.TimeUnit;
+import java.util.zip.Inflater;
 
 public class LoginActivity extends AppCompatActivity {
-    MaterialEditText username,password,email;
-    MaterialEditText EnteredUser,EnteredPass;
-    Button login,signup;
-    FirebaseDatabase database;
-    DatabaseReference users;
+    private EditText etxtPhone;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    private EditText etxtPhoneCode,nameField,emailField;
+    private String mVerificationId;
+
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference mNameDatabaseReference;
+    private DatabaseReference mPhnNo_databaseREference;
+
+    public static String student_name="",student_phnNo="",user_email="";
+    public  static String Uid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        login=findViewById(R.id.loginBtn);
-        signup=findViewById(R.id.signupBtn);
-        EnteredUser=findViewById(R.id.Tusername);
-        EnteredPass=findViewById(R.id.Tpassword);
-        database=FirebaseDatabase.getInstance();
-        users=database.getReference("Users");
-        signup.setOnClickListener(new View.OnClickListener() {
+        mFirebaseDatabase=FirebaseDatabase.getInstance();
+        //mNameDatabaseReference=mFirebaseDatabase.getReference().child("users").child("schoolname").child(sclname).child(student_name);
+        mPhnNo_databaseREference = mFirebaseDatabase.getReference();
+
+        etxtPhone = (EditText) findViewById(R.id.phoneField);
+        etxtPhoneCode = (EditText) findViewById(R.id.codeField);
+
+        mAuth = FirebaseAuth.getInstance();
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
-            public void onClick(View v) {
-                signupDialog();
-            }
-        });
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                login(EnteredPass.getText().toString(),EnteredUser.getText().toString());
-            }
-        });
-    }
-
-    private void login(final String pass,final String username) {
-        users.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.child(username).exists()){
-                    if(!username.isEmpty()){
-                        User user= dataSnapshot.child(username).getValue(User.class);
-                        if(user.getPassword().equals(pass)){
-                            Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
-
-                        }
-                        else{
-                            Toast.makeText(LoginActivity.this, "Enter Correct Password", Toast.LENGTH_SHORT).show();
-
-                        }
-                    }
-                    else{
-                        Toast.makeText(LoginActivity.this, "Enter some valid username", Toast.LENGTH_SHORT).show();
-
-                    }
-                }
-                else{
-                    Toast.makeText(LoginActivity.this, "Please Sign Up first", Toast.LENGTH_SHORT).show();
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if (firebaseAuth.getCurrentUser() != null) {
+                    //  Toast.makeText(StudentInfo.this, getString(R.string.now_logged_in) + firebaseAuth.getCurrentUser().getProviderId(), Toast.LENGTH_SHORT).show();
+                    // isStudent = true;
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
             }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
+        };
     }
 
-    private void signupDialog() {
-        final AlertDialog.Builder alertDialog= new AlertDialog.Builder(LoginActivity.this);
-        alertDialog.setTitle("Sign Up");
-        alertDialog.setMessage("Fill the details correctly");
-        LayoutInflater inflater= this.getLayoutInflater();
-        View sign_up_layout=inflater.inflate(R.layout.sign_up_layout,null);
-        username=(MaterialEditText) sign_up_layout.findViewById(R.id.username);
-        password= sign_up_layout.findViewById(R.id.password);
-        email= sign_up_layout.findViewById(R.id.email);
-        alertDialog.setView(sign_up_layout);
-        alertDialog.setIcon(R.drawable.ic_account_circle_black_24dp); //drawable  right click -->vector asset-->choose desired icon
-        alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                final User user = new User(username.getText().toString(), password.getText().toString(), email.getText().toString());
-                users.addListenerForSingleValueEvent(new ValueEventListener() {
+    public void requestCode(View view) {
+        String phoneNumber = etxtPhone.getText().toString();
+        if (TextUtils.isEmpty(phoneNumber))
+            return;
+        PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                phoneNumber, 60, TimeUnit.SECONDS, LoginActivity.this, new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                     @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.child(user.getUsername()).exists()) {
-                            Toast.makeText(LoginActivity.this, "UserName already exists", Toast.LENGTH_SHORT).show();
+                    public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
+                        //Called if it is not needed to enter verification code
+                        signInWithCredential(phoneAuthCredential);
+                    }
+
+                    @Override
+                    public void onVerificationFailed(FirebaseException e) {
+                        //incorrect phone number, verification code, emulator, etc.
+                        Toast.makeText(LoginActivity.this, "onVerificationFailed " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onCodeSent(String verificationId, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+                        //now the code has been sent, save the verificationId we may need it
+                        super.onCodeSent(verificationId, forceResendingToken);
+
+                        mVerificationId = verificationId;
+                    }
+
+                    @Override
+                    public void onCodeAutoRetrievalTimeOut(String verificationId) {
+                        //called after timeout if onVerificationCompleted has not been called
+                        super.onCodeAutoRetrievalTimeOut(verificationId);
+                        Toast.makeText(LoginActivity.this, "onCodeAutoRetrievalTimeOut :" + verificationId, Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+    }
+
+    private void signInWithCredential(final PhoneAuthCredential phoneAuthCredential) {
+        mAuth.signInWithCredential(phoneAuthCredential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(LoginActivity.this, "Success", Toast.LENGTH_SHORT).show();
+
+                            student_phnNo = etxtPhone.getText().toString();
+
+                            FirebaseUser user = task.getResult().getUser();
+                            Uid= user.getUid();
+
+                            mPhnNo_databaseREference.child("users").child(Uid).child("phone no:").setValue(student_phnNo);
+                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+
+
+
+//                            if (status == 1){
+//                                mPhnNo_databaseREference.child("users").child(Uid).child("status").setValue("student");
+
+
+
+
                         } else {
-                            users.child(user.getUsername()).setValue(user);
-                            Toast.makeText(LoginActivity.this, "Signup Successful", Toast.LENGTH_SHORT).show();
-
+                            Toast.makeText(LoginActivity.this, "Failure", Toast.LENGTH_SHORT).show();
                         }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
                     }
                 });
-                dialog.dismiss();
-            }
-        });
-        alertDialog.show();
     }
+
+    public void signIn(View view) {
+        String code = etxtPhoneCode.getText().toString();
+        if (TextUtils.isEmpty(code))
+            return;
+
+        signInWithCredential(PhoneAuthProvider.getCredential(mVerificationId, code));
+    }
+
 }

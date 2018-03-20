@@ -3,7 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/iotboard.iml" filepath="$PROJECT_DIR$/iotboard.iml" />
+      <module fileurl="file://D:\Programming\Android Projects\iotboardApp\iotboard.iml" filepath="D:\Programming\Android Projects\iotboardApp\iotboard.iml" />
+      <module fileurl="file://$PROJECT_DIR$/iotboardApp.iml" filepath="$PROJECT_DIR$/iotboardApp.iml" />
     </modules>
   </component>
 </project>
