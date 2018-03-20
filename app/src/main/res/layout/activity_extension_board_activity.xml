@@ -16,6 +16,7 @@
             android:textSize="17sp"
             android:padding="10sp"
             android:textStyle="bold"
+
             android:textColor="#000"
             android:layout_height="wrap_content"
             android:text="Room Name"/>

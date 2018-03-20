@@ -34,6 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="26dp"
         android:ems="10"
+
         android:layout_centerHorizontal="true"
         android:hint="Enter Request Code"
         android:inputType="number"
