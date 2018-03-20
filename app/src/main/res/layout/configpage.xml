@@ -12,6 +12,8 @@
       android:text="Enter your unique itendification code mentioned on your extension box"/>
 
 
+
+
   <com.rengwuxian.materialedittext.MaterialEditText
       android:id="@+id/editboardName"
       android:layout_width="match_parent"
