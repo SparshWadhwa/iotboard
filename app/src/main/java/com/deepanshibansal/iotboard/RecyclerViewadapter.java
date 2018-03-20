@@ -22,14 +22,7 @@ public class RecyclerViewadapter extends RecyclerView.Adapter<RecyclerViewadapte
 
     private List<String> values;
 
-
-
-
     private DatabaseReference assgn_database_adapter;
-
-
-
-
     private Context mContext;
 
     // Provide a reference to the views for each data item
@@ -38,14 +31,14 @@ public class RecyclerViewadapter extends RecyclerView.Adapter<RecyclerViewadapte
     public class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         public TextView txtHeader;
-        public TextView txtFooter;
-        public ImageView assgnDelButton;
+
 
         public View layout;
 
         public ViewHolder(View v) {
             super(v);
             layout = v;
+            txtHeader = (TextView) v.findViewById(R.id.room);
 
         }
     }
@@ -90,7 +83,16 @@ public class RecyclerViewadapter extends RecyclerView.Adapter<RecyclerViewadapte
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-
+        final String boardName = values.get(position);
+    holder.txtHeader.setText(boardName);
+    holder.txtHeader.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent(mContext, ExtensionBoard_activity.class);
+            //intent.putExtra("keyName",assgn_title);
+            mContext.startActivity(intent);
+        }
+    });
 
     }
 

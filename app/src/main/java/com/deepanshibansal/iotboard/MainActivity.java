@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -52,17 +53,19 @@ public class MainActivity extends AppCompatActivity {
             uid = mFirebaseAuth.getCurrentUser().getUid();
         }
 
-
+        mFirebaseDatabaseRef = FirebaseDatabase.getInstance().getReference().child("Users");
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
-        recyclerView.setHasFixedSize(true);
+        recyclerView.setHasFixedSize(false);
         layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         final List<String> lst = new ArrayList<>();
 
         if(uid.equals("")){
+            Toast.makeText(getApplicationContext() , "uid not fetched" , Toast.LENGTH_SHORT).show();
             lst.add("no config Boards yet.");
         }
         else{
+            Toast.makeText(getApplicationContext() , "uid  fetched =" + uid , Toast.LENGTH_SHORT).show();
             boardsDatabaseRef = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
             boardsDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -70,13 +73,15 @@ public class MainActivity extends AppCompatActivity {
 
                     for (DataSnapshot dsp : dataSnapshot.getChildren()) {
 
-
+                        Toast.makeText(getApplicationContext() , "list item : " +dsp.getKey()  , Toast.LENGTH_SHORT).show();
                         lst.add(String.valueOf(dsp.getKey()));
 
                     }
                     // Toast.makeText(getActivity())
                     mAdapter = new RecyclerViewadapter(getApplicationContext(), lst);
                     recyclerView.setAdapter(mAdapter);
+                    Toast.makeText(getApplicationContext() , "list size is " + lst.size()  , Toast.LENGTH_SHORT).show();
+
 
 
                 }
@@ -86,9 +91,17 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             });
+//            recyclerView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    startActivity(new  Intent (getApplicationContext() , ExtensionBoard_activity.class) );
+//                }
+//            });
+
 
         }
         final Context context = this;
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -106,20 +119,27 @@ final MaterialEditText idnum=(MaterialEditText)promptsView.findViewById(R.id.edi
                         .setCancelable(false)
                         .setPositiveButton("Config", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,int id) {
-                                if (TextUtils.isEmpty(idnum.getText().toString())) {
-                                    YoYo.with(Techniques.Shake)
-                                            .duration(500)
-                                            .repeat(1)
-                                            .playOn(promptsView.findViewById(R.id.edittext));
-                                }
-                                else if(TextUtils.isEmpty(boardName.getText().toString())){
-                                    YoYo.with(Techniques.Shake)
-                                            .duration(500)
-                                            .repeat(1)
-                                            .playOn(promptsView.findViewById(R.id.edittext));
-                                }
-                                mFirebaseDatabaseRef.child(uid).child(boardName.getText().toString()).child("uniqueid").setValue(idnum.getText().toString());
-                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+//                                if (TextUtils.isEmpty(idnum.getText().toString())) {
+//                                    YoYo.with(Techniques.Shake)
+//                                            .duration(500)
+//                                            .repeat(1)
+//                                            .playOn(promptsView.findViewById(R.id.edittext));
+//
+//                                }
+//                                else if(TextUtils.isEmpty(boardName.getText().toString())){
+//                                    YoYo.with(Techniques.Shake)
+//                                            .duration(500)
+//                                            .repeat(1)
+//                                            .playOn(promptsView.findViewById(R.id.edittext));
+//                                }
+                                final String boardNamefianl = boardName.getText().toString();
+                                Toast.makeText(getApplicationContext() , boardNamefianl , Toast.LENGTH_SHORT).show();
+
+                                final String boardidfianl = idnum.getText().toString();
+                                Toast.makeText(getApplicationContext() , boardidfianl , Toast.LENGTH_SHORT).show();
+                                mFirebaseDatabaseRef.child(uid).child(boardNamefianl).child("uniqueid").setValue(boardidfianl);
+                             //
+                                //   startActivity(new Intent(getApplicationContext(), MainActivity.class));
 
                             }
                         })
@@ -148,7 +168,6 @@ final MaterialEditText idnum=(MaterialEditText)promptsView.findViewById(R.id.edi
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
