@@ -88,20 +88,17 @@ public class MainActivity extends AppCompatActivity {
             });
 
         }
+        final Context context = this;
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
-            final Context context = getApplicationContext();
 
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
                 LayoutInflater li = LayoutInflater.from(context);
                 final View promptsView = li.inflate(R.layout.configpage, null);
 
-                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                        context);
+                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
                 alertDialogBuilder.setView(promptsView);
 final MaterialEditText idnum=(MaterialEditText)promptsView.findViewById(R.id.edittext);
                 final MaterialEditText boardName=(MaterialEditText)promptsView.findViewById(R.id.editboardName);
