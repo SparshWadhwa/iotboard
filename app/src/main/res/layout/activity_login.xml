@@ -11,6 +11,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
         android:hint="Enter Phone Number"
         android:inputType="phone"
 
@@ -32,6 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="26dp"
         android:ems="10"
+        android:layout_centerHorizontal="true"
         android:hint="Enter Request Code"
         android:inputType="number"
         android:layout_below="@+id/codeBtn"

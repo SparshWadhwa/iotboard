@@ -9,12 +9,13 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:background="#b7e6dcdc"
+        android:background="#dafd0202"
         android:layout_height="wrap_content">
         <TextView
             android:layout_width="wrap_content"
             android:textSize="17sp"
             android:padding="10sp"
+            android:textStyle="bold"
             android:textColor="#000"
             android:layout_height="wrap_content"
             android:text="Room Name"/>
