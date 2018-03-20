@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "773066481351",
+    "firebase_url": "https://iotboard-f8a25.firebaseio.com",
+    "project_id": "iotboard-f8a25",
+    "storage_bucket": "iotboard-f8a25.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:773066481351:android:43274a14e4cafcb2",
+        "android_client_info": {
+          "package_name": "com.deepanshibansal.iotboard"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "773066481351-kjru0h190o3p25bpg9s4rail3mclk022.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.deepanshibansal.iotboard",
+            "certificate_hash": "b97f9b3e3473346e09af0f2c78fd92d70478b3fc"
+          }
+        },
+        {
+          "client_id": "773066481351-1572djv90fk0b0g6nov0ourc4vnit0c8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC1j2DyIJ6FdolM_syYCmA8V0LI-du6MoA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "773066481351-1572djv90fk0b0g6nov0ourc4vnit0c8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
