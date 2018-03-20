@@ -18,6 +18,7 @@
         android:textColor="#000"
         android:textStyle="bold"
 
+
         android:fontFamily="serif-monospace"
         android:layout_margin="20sp"
         android:padding="10sp"
